@@ -99,7 +99,8 @@ public class KubeRunner {
         boolean adminExists = false;
         String accessToken = "";
         String adminUsername = System.getenv().getOrDefault("SYNAPSE_ADMIN_USER", "synapseadmin");
-        String adminPassword = System.getenv().getOrDefault("SYNAPSE_ADMIN_PASSWORD", "synapseadminadmin");
+        String adminPassword = System.getenv().getOrDefault("SYNAPSE_ADMIN_PASSWORD", "synapseadmin");
+        String adminDisplayName = System.getenv().getOrDefault("SYNAPSE_ADMIN_DISPLAY_NAME", "Globex Support");
         String nonce;
         try {
             nonce = getRegistrationNonce();
@@ -115,7 +116,7 @@ public class KubeRunner {
         byte[] sharedSecret = Base64.getDecoder().decode(registrationSecret.getBytes(StandardCharsets.UTF_8));
         String hmac = generateMac(sharedSecret, hmacData);
         JsonObject registerAdminUser = new JsonObject().put("nonce", nonce).put("username", adminUsername)
-                .put("password", adminPassword).put("admin", true).put("mac", hmac);
+                .put("displayname", adminDisplayName).put("password", adminPassword).put("admin", true).put("mac", hmac);
         try {
             Response response = synapseService.registerUser(registerAdminUser.encode());
             LOGGER.info("User " + adminUsername + " created");
